@@ -1,12 +1,23 @@
+import { MongoClient } from "mongodb";
+
+const connectionString: string = process.env.ATLAS_URI || "";
+const client = new MongoClient(connectionString);
+
+let dbConnection: any = null;
+
 export const dbConnect = async (): Promise<void> => {
+  if (dbConnection) return;
+
   try {
-    console.log("Connecting to database...");
-    console.log("Trying to connect to MongoDB");
-    for (let i = 1; i <= 3; i++) {
-      console.log(`⏲  Trying to connect to MongoDB... ${i}`);
-    }
-    await console.log("Connected to database 🔥");
+    await client.connect();
+    dbConnection = client.db("test");
+    console.log("🚀 Database connected");
   } catch (error) {
-    console.log(`Error connecting to database: ${error}`);
+    console.log(`Database connection error: ${error}`);
   }
 };
+
+export const getDbConnection = (): any => {
+  return dbConnection;
+};
+
