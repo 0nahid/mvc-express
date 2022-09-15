@@ -55,5 +55,16 @@ const updateUser = async (req: Request, res: Response) => {
   });
 };
 
+const deleteUser = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const getDb = await getDbConnection();
+  const user = await getDb.collection("users").deleteOne({ _id: new ObjectId(id) });
+  res.status(200).json({
+    status: true,
+    message: "User Deleted Successfully",
+    data: user,
+  });
+  
+};
 
-export const userRoute = { getAllUsers, createUser, getUserById ,updateUser};
+export const userRoute = { getAllUsers, createUser, getUserById ,updateUser,deleteUser};

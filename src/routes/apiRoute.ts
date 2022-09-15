@@ -4,8 +4,11 @@ import { userRoute } from "../controllers/controller";
 const router: Router = Router();
 
 router.get("/", userRoute.getAllUsers);
-router.get("/:id", userRoute.getUserById);
-router.patch("/:id", userRoute.updateUser);
+router
+  .route("/:id")
+  .get(userRoute.getUserById)
+  .patch(userRoute.updateUser)
+  .delete(userRoute.deleteUser);
 
 router.post("/", userRoute.createUser);
 
