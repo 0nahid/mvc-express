@@ -44,4 +44,16 @@ const getUserById = async (req: Request, res: Response) => {
 
 };
 
-export const userRoute = { getAllUsers, createUser, getUserById };
+const updateUser = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const getDb = await getDbConnection();
+  const user = await getDb.collection("users").updateOne({ _id: new ObjectId(id) }, { $set: req.body });
+  res.status(200).json({
+    status: true,
+    message: "User Updated Successfully",
+    data: user,
+  });
+};
+
+
+export const userRoute = { getAllUsers, createUser, getUserById ,updateUser};

@@ -5,7 +5,7 @@ const router: Router = Router();
 
 router.get("/", userRoute.getAllUsers);
 router.get("/:id", userRoute.getUserById);
-// router.patch("/:id", userRoute.updateUser);
+router.patch("/:id", userRoute.updateUser);
 
 router.post("/", userRoute.createUser);
 
