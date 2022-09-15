@@ -20,7 +20,6 @@ const createUser = async (req: Request, res: Response) => {
 };
 
 const getUserById = async (req: Request, res: Response) => {
-  try {
     const { id } = req.params;
     const getDb = await getDbConnection();
     // valid object id check
@@ -30,15 +29,19 @@ const getUserById = async (req: Request, res: Response) => {
         message: "Invalid Object Id",
       });
     }
-    const user = await getDb
-      .collection("users")
-      .findOne({ _id: new ObjectId(id) });
-  } catch (err) {
-    res.status(404).json({
-      status: false,
-      message: "User not found",
+    const user = await getDb.collection("users").findOne({ _id: new ObjectId(id) });
+    if (!user) {
+      return res.status(404).json({
+        status: false,
+        message: "User Not Found",
+      });
+    }
+    res.status(200).json({
+      status: true,
+      message: "User Found",
+      data: user,
     });
-  }
+
 };
 
 export const userRoute = { getAllUsers, createUser, getUserById };
