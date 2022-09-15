@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { ObjectId } from "mongodb";
 import { getDbConnection } from "./../utils/dbConnect";
 
 /* for get all the users */
@@ -19,8 +20,25 @@ const createUser = async (req: Request, res: Response) => {
 };
 
 const getUserById = async (req: Request, res: Response) => {
-  const getDb = await getDbConnection();
-  const user = await getDb.collection("users").findOne({ _id: req.params.id });
+  try {
+    const { id } = req.params;
+    const getDb = await getDbConnection();
+    // valid object id check
+    if (!ObjectId.isValid(id)) {
+      return res.status(400).json({
+        status: false,
+        message: "Invalid Object Id",
+      });
+    }
+    const user = await getDb
+      .collection("users")
+      .findOne({ _id: new ObjectId(id) });
+  } catch (err) {
+    res.status(404).json({
+      status: false,
+      message: "User not found",
+    });
+  }
 };
 
 export const userRoute = { getAllUsers, createUser, getUserById };
